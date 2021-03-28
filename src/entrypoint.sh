@@ -44,6 +44,19 @@ adduser -h "${TOR_ROUTER_HOME}" -u "${TOR_ROUTER_UID}" -D "${TOR_ROUTER_USER}"
 # Rstr
 iptables-restore "${TOR_ROUTER_HOME}/iptables.rules"
 
+# Set Tor control port password
+if [ -n "${TOR_CONTROL_PASSWORD}" ]; then
+    echo 'Enabling Tor control port'
+    HASHED_CONTROL_PASSWORD=$(exec sudo -u "${TOR_ROUTER_USER}" \
+        tor --hash-password "${TOR_CONTROL_PASSWORD}")
+    cat <<EOT >> "${TOR_CONFIG_FILE}"
+
+# Setup Tor control port
+ControlPort 0.0.0.0:9051
+HashedControlPassword ${HASHED_CONTROL_PASSWORD}
+EOT
+fi
+
 # Run tor as the TOR_ROUTER_USER
 echo 'Starting the Tor router'
 exec sudo -u "${TOR_ROUTER_USER}" tor -f "${TOR_CONFIG_FILE}" "$@"

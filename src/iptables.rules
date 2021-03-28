@@ -12,6 +12,8 @@
 # Allow connections to Tor Proxy
 -A INPUT -p tcp --dport 9050 -m state --state NEW -j ACCEPT
 -A INPUT -p udp --dport 5353 -m state --state NEW -j ACCEPT
+# Allow connections to Tor Control port
+-A INPUT -p tcp --dport 9051 -m state --state NEW -j ACCEPT
 # Log dropped packets
 -A INPUT -j LOG --log-prefix "Dropped INPUT packet: " --log-level 7 --log-uid
 
