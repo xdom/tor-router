@@ -1,11 +1,5 @@
 #!/bin/sh -e
 
-# Configure environment variables
-TOR_ROUTER_USER="tor-router"
-TOR_ROUTER_UID="9001"
-TOR_ROUTER_HOME="/opt/tor-router"
-TOR_CONFIG_FILE="${TOR_ROUTER_HOME}/torrc"
-
 # Enable debug if requested
 if [ "${DEBUG}" = "true" ]; then
   set -x
@@ -37,9 +31,6 @@ for interface in $(ip link show | awk '/^[0-9]*:/ {print $2}' | sed -e 's/:$//' 
 done
 
 echo 'Setting up container'
-
-# Setup the TOR_ROUTER_USER
-adduser -h "${TOR_ROUTER_HOME}" -u "${TOR_ROUTER_UID}" -D "${TOR_ROUTER_USER}"
 
 # Rstr
 iptables-restore "${TOR_ROUTER_HOME}/iptables.rules"
